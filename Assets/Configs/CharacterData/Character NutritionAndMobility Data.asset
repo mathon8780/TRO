@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c114f94f94472e971770931486acda, type: 3}
+  m_Name: Character NutritionAndMobility Data
+  m_EditorClassIdentifier: 
+  Health: 100
+  MaxHealth: 100
+  Hydration: 70
+  MaxHydration: 100
+  Satiety: 0
+  MaxSatiety: 100
+  Carbohydrates: 60
+  MaxCarbohydrates: 100
+  Fat: 40
+  MaxFat: 100
+  Protein: 80
+  MaxProtein: 100
+  Energy: 100
+  MaxEnergy: 100
+  WalkSpeed: 6
+  RunSpeed: 6
+  RushSpeed: 6
+  SquatMoveSpeed: 6
+  SquatQuickMoveSpeed: 6
+  LieMoveSpeed: 6
+  LieQuickMoveSpeed: 6
+  JumpHeight: 6
+  RotationSpeed: 6
+  WalkConsume: 6
+  RunConsume: 6
+  RushConsume: 6
+  SquatMoveConsume: 6
+  SquatQuickMoveConsume: 6
+  LieMoveConsume: 6
+  LieQuickMoveConsume: 6
+  JumpConsume: 6
+  WalkMinEnergyRequire: 6
+  RunMinEnergyRequire: 6
+  RushMinEnergyRequire: 6
+  SquatMoveMinEnergyRequire: 6
+  SquatQuickMoveMinEnergyRequire: 6
+  LieMoveMinEnergyRequire: 6
+  LieQuickMoveMinEnergyRequire: 6
+  JumpMinEnergyRequire: 6
