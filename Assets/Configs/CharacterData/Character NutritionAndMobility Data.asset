@@ -20,7 +20,7 @@ MonoBehaviour:
   MaxSatiety: 100
   Carbohydrates: 60
   MaxCarbohydrates: 100
-  Fat: 40
+  Fat: 42
   MaxFat: 100
   Protein: 80
   MaxProtein: 100

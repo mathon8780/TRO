@@ -12,7 +12,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6358513923884528819}
@@ -40,7 +40,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -100,7 +100,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -188,7 +188,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6358513923884528819}
@@ -245,7 +245,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6667574967310575363}
@@ -273,7 +273,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1099543800689221497}
@@ -301,7 +301,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8758190192800271975}
@@ -329,7 +329,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1099543800689221497}
@@ -357,7 +357,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8758190192800271975}
@@ -382,7 +382,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -393,7 +393,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -407,7 +407,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -492,7 +492,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Fall
+    m_ConditionEvent: Falling
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -407807627352830421}
@@ -517,7 +517,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3281796291129589647}
@@ -595,7 +595,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Rush
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 74366676079313080}
@@ -707,7 +707,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6748554986110740187}
@@ -732,13 +732,13 @@ AnimatorController:
   m_Name: Player Actions
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Jump
+  - m_Name: Jumping
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Fall
+  - m_Name: Falling
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -780,7 +780,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: QucikMove
+  - m_Name: QuickMove
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -817,7 +817,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -879,10 +879,10 @@ AnimatorStateMachine:
     m_Position: {x: 250, y: -200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3169276507400960219}
-    m_Position: {x: 1200, y: -690, z: 0}
+    m_Position: {x: 1200, y: -700, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6667574967310575363}
-    m_Position: {x: 1890, y: 90, z: 0}
+    m_Position: {x: 1770, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7812397468635366862}
     m_Position: {x: 880, y: -920, z: 0}
@@ -894,25 +894,25 @@ AnimatorStateMachine:
     m_Position: {x: 1200, y: -1150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8758190192800271975}
-    m_Position: {x: 2280, y: 220, z: 0}
+    m_Position: {x: 1530, y: 500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6358513923884528819}
-    m_Position: {x: 2280, y: -50, z: 0}
+    m_Position: {x: 2120, y: 500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3326755862327657161}
-    m_Position: {x: 1190, y: 870, z: 0}
+    m_Position: {x: 620, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6748554986110740187}
-    m_Position: {x: 960, y: 1180, z: 0}
+    m_Position: {x: 390, y: 500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1099543800689221497}
-    m_Position: {x: 1440, y: 1180, z: 0}
+    m_Position: {x: 860, y: 500, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3281796291129589647}
-    m_Position: {x: 920, y: -50, z: 0}
+    m_Position: {x: 2210, y: -700, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -407807627352830421}
-    m_Position: {x: 570, y: -50, z: 0}
+    m_Position: {x: 1720, y: -540, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -933,12 +933,6 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Move
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: Rush
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7812397468635366862}
@@ -969,7 +963,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Rush
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 74366676079313080}
@@ -994,7 +988,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -1022,7 +1016,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -1094,7 +1088,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 14c6ab118ec773a44b952bef5b1c2441, type: 2}
+  m_Motion: {fileID: 0}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1138,9 +1132,6 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: Move
     m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
-    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3326755862327657161}
   m_Solo: 0
@@ -1164,7 +1155,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -1189,13 +1180,10 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Move
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
     m_ConditionEvent: Rush
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 74366676079313080}
@@ -1223,7 +1211,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -1254,7 +1242,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -6748554986110740187}
@@ -1293,7 +1281,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -1395,7 +1383,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -1448,7 +1436,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6667574967310575363}
@@ -1476,7 +1464,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -1504,7 +1492,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Jump
+    m_ConditionEvent: Jumping
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3169276507400960219}
@@ -1532,7 +1520,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Rush
@@ -1595,7 +1583,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Rush
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7812397468635366862}
@@ -1634,7 +1622,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 0.75
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -1651,7 +1639,7 @@ AnimatorStateTransition:
     m_ConditionEvent: Move
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: QucikMove
+    m_ConditionEvent: QuickMove
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3326755862327657161}

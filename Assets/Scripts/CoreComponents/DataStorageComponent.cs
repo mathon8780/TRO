@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoreComponents.DataRecord;
+using CoreListener;
 using DataStructure;
+using UI.EventType;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Serialization;
 
 
@@ -43,6 +46,54 @@ namespace CoreComponents
             #endregion
         }
 
+        private void Update()
+        {
+            UpdateNutritionData();
+        }
+
+
+        #region UpdateInfo
+
+        private void UpdateNutritionData()
+        {
+            StateInfo stateInfo = new StateInfo();
+
+            stateInfo.State = E_PlayerProperty.Health;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Health;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHealth;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            stateInfo.State = E_PlayerProperty.Hydration;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Hydration;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHydration;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            //饱食度 = 碳水化合物 * 0.5 + 脂肪 * 0.3 + 蛋白质 * 0.2
+            stateInfo.State = E_PlayerProperty.Satiety;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates * 0.5f +
+                                     _runTimeNutritionAndMobilityData.Fat * 0.3f +
+                                     _runTimeNutritionAndMobilityData.Protein * 0.2f;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxSatiety;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            stateInfo.State = E_PlayerProperty.Carbohydrates;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxCarbohydrates;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            stateInfo.State = E_PlayerProperty.Fat;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Fat;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxFat;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            stateInfo.State = E_PlayerProperty.Protein;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Protein;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxProtein;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            stateInfo.State = E_PlayerProperty.Energy;
+            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Energy;
+            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxEnergy;
+            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+        }
+
+        #endregion
+
+        #region GetInfo
 
         /// <summary>
         /// 获取营养和移动数据的实例
@@ -60,5 +111,7 @@ namespace CoreComponents
         {
             return _movementCost ??= new MovementCost(movementAndConsumptions);
         }
+
+        #endregion
     }
 }

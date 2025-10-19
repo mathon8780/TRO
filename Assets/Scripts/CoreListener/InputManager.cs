@@ -31,6 +31,7 @@ namespace CoreListener
 
         protected override void Awake()
         {
+            base.Awake();
             _inputActions = new Player_Actions();
 
             #region 绑定输入回调

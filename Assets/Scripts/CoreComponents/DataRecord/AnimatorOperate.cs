@@ -36,12 +36,10 @@ namespace CoreComponents.DataRecord
             E_MovementActions.Lie
         };
 
-        private E_MovementActions _curMovementAction = E_MovementActions.Idle; //控制当前的移动行为
 
         /// <summary>
         /// 初始化构造
         /// </summary>
-        /// <param name="animator">Animator</param>
         public AnimatorOperate(Animator animator)
         {
             _animator = animator ?? throw new ArgumentNullException(nameof(animator));
@@ -213,7 +211,31 @@ namespace CoreComponents.DataRecord
         /// <summary>
         /// 获取当前姿态
         /// </summary>
-        public E_MovementActions GetCurrentPosture() => _curPosture;
+        public E_MovementActions GetCurrentMoveAction()
+        {
+            // Debug.Log(_curPosture + "," + _isMoving + "," + _isQuickMoving + "," + _isRushing);
+            //需要排序优先级 rush > quickMove > move
+            switch (_curPosture)
+            {
+                case E_MovementActions.Sit:
+                    return E_MovementActions.Sit;
+                case E_MovementActions.Stand:
+                    if (_isRushing) return E_MovementActions.Rush;
+                    if (_isQuickMoving) return E_MovementActions.Run;
+                    if (_isMoving) return E_MovementActions.Walk;
+                    return E_MovementActions.Stand;
+                case E_MovementActions.Squat:
+                    if (_isQuickMoving) return E_MovementActions.SquatQuickMove;
+                    if (_isMoving) return E_MovementActions.SquatMove;
+                    return E_MovementActions.Squat;
+                case E_MovementActions.Lie:
+                    if (_isQuickMoving) return E_MovementActions.LieQuickMove;
+                    if (_isMoving) return E_MovementActions.LieMove;
+                    return E_MovementActions.Lie;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         /// <summary>
         /// 获取当前是否正在移动
@@ -234,170 +256,7 @@ namespace CoreComponents.DataRecord
 
         #endregion
 
-        // public void TriggerJump()
-        // {
-        //     // 只有在站立状态下才能跳跃
-        //     if (_curPosture == E_MovementActions.Stand)
-        //     {
-        //         _animator.SetTrigger(GetHash(E_MovementActions.Jumping));
-        //     }
-        //     // 蹲下或趴下时起身
-        //     else if (_curPosture == E_MovementActions.Squat || _curPosture == E_MovementActions.Lie)
-        //     {
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Lie), false);
-        //         // 切换到站立状态
-        //         _curPosture = E_MovementActions.Stand;
-        //         // 设置站立动画参数
-        //         _animator.SetBool(GetHash(E_MovementActions.Stand), true);
-        //     }
-        // }
-        //
-        // public void TriggerSit()
-        // {
-        //     UpdateState(E_MovementActions.Sit);
-        // }
-        //
-        // public void TriggerSquat()
-        // {
-        //     UpdateState(E_MovementActions.Squat);
-        // }
-        //
-        // public void TriggerLie()
-        // {
-        //     UpdateState(E_MovementActions.Lie);
-        // }
-        //
-        // public void TriggerMove(bool move)
-        // {
-        //     _animator.SetBool(GetHash(E_MovementActions.Move), move);
-        //     UpdateAction(E_MovementActions.Move);
-        // }
-        //
-        // public void TriggerRun(bool run)
-        // {
-        //     _animator.SetBool(GetHash(E_MovementActions.Move), run);
-        //     UpdateAction(E_MovementActions.QuickMove);
-        // }
-        //
-        //
-        // public void TriggerRush(bool rush)
-        // {
-        //     _animator.SetBool(GetHash(E_MovementActions.QuickMove), rush);
-        //     UpdateAction(E_MovementActions.Rush);
-        // }
-        //
-        //
-        // /// <summary>
-        // /// 更新状态
-        // /// </summary>
-        // /// <param name="newState"></param>
-        // private void UpdateState(E_MovementActions newState)
-        // {
-        //     // 设置newState为true 并设置_curState为newState 其余的状态为false
-        //     if (newState == E_MovementActions.Sit)
-        //     {
-        //         _animator.SetBool(GetHash(E_MovementActions.Stand), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Lie), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Sit), true);
-        //         _curPosture = E_MovementActions.Sit;
-        //     }
-        //     else if (newState == E_MovementActions.Stand)
-        //     {
-        //         _animator.SetBool(GetHash(E_MovementActions.Sit), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Lie), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Stand), true);
-        //         _curPosture = E_MovementActions.Stand;
-        //     }
-        //     else if (newState == E_MovementActions.Lie)
-        //     {
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Stand), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Lie), true);
-        //         _curPosture = E_MovementActions.Lie;
-        //     }
-        //     else if (newState == E_MovementActions.Squat)
-        //     {
-        //         _animator.SetBool(GetHash(E_MovementActions.Sit), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Stand), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Lie), false);
-        //         _animator.SetBool(GetHash(E_MovementActions.Squat), true);
-        //         _curPosture = E_MovementActions.Squat;
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("Invalid state transition + " + newState);
-        //     }
-        // }
-        //
-        // /// <summary>
-        // /// 更新行为
-        // /// </summary>
-        // /// <param name="newAction">新的行为</param>
-        // /// <exception cref="ArgumentOutOfRangeException"></exception>
-        // private void UpdateAction(E_MovementActions newAction)
-        // {
-        //     switch (newAction)
-        //     {
-        //         case E_MovementActions.Idle:
-        //             break;
-        //         case E_MovementActions.Move:
-        //             switch (_curPosture)
-        //             {
-        //                 case E_MovementActions.Stand:
-        //                     _curMovementAction = E_MovementActions.Walk;
-        //
-        //                     break;
-        //                 case E_MovementActions.Squat:
-        //                     _curMovementAction = E_MovementActions.SquatMove;
-        //                     break;
-        //                 case E_MovementActions.Lie:
-        //                     _curMovementAction = E_MovementActions.LieMove;
-        //                     break;
-        //                 default:
-        //                     Debug.LogError("Invalid state during Move action: " + _curPosture);
-        //                     throw new ArgumentOutOfRangeException();
-        //             }
-        //
-        //             break;
-        //         case E_MovementActions.QuickMove:
-        //             switch (_curPosture)
-        //             {
-        //                 case E_MovementActions.Stand: _curMovementAction = E_MovementActions.Run; break;
-        //                 case E_MovementActions.Squat: _curMovementAction = E_MovementActions.SquatQuickMove; break;
-        //                 case E_MovementActions.Lie: _curMovementAction = E_MovementActions.LieQuickMove; break;
-        //                 default:
-        //                     Debug.LogError("Invalid state during QuickMove action: " + _curPosture);
-        //                     throw new ArgumentOutOfRangeException();
-        //             }
-        //
-        //             break;
-        //         case E_MovementActions.Rush:
-        //             if (_curPosture == E_MovementActions.Stand)
-        //             {
-        //                 _curMovementAction = E_MovementActions.Rush;
-        //             }
-        //
-        //             break;
-        //         default:
-        //         {
-        //             Debug.LogError("Invalid action transition + " + newAction);
-        //             throw new ArgumentOutOfRangeException();
-        //         }
-        //     }
-        // }
-        //
-        //
-        // public E_MovementActions GetCurrentMovementAction()
-        // {
-        //     UpdateState(_curPosture);
-        //     UpdateAction(_curMovementAction);
-        //     return _curMovementAction;
-        // }
-        //
-        // #endregion
+
+        //todo: 在状态切换时 无法立即切换 而是在当前的Posture中循环 直到停下后才开始切换对应的行为
     }
 }

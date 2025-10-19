@@ -5,6 +5,7 @@ namespace BaseTools
     public class SingletonMono<T> : MonoBehaviour where T : Component
     {
         private static T _instance;
+
         public static T Instance
         {
             get
@@ -22,9 +23,11 @@ namespace BaseTools
                         // DontDestroyOnLoad(singletonObject);
                     }
                 }
+
                 return _instance;
             }
         }
+
         /// <summary>
         /// 在 Awake 阶段确保单例的唯一性。
         /// </summary>
@@ -36,11 +39,14 @@ namespace BaseTools
                 Destroy(gameObject);
                 return;
             }
+
             // 设置当前实例为唯一实例
             _instance = this as T;
+            DontDestroyOnLoad(gameObject);
             // 可选：取消注释以支持跨场景持久化
             // Don'tDestroyOnLoad(gameObject);
         }
+
         /// <summary>
         /// 可选：在 OnDestroy 中清理实例引用（防止编辑器下热重载导致的残留）
         /// </summary>

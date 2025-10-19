@@ -78,6 +78,7 @@ namespace DataStructure
 
         #endregion
 
+
         [Header("最低移动能量需求")]
 
         #region 最低移动能量需求
@@ -109,5 +110,19 @@ namespace DataStructure
         public bool CanJump => Energy >= JumpMinEnergyRequire; //是否可以跳跃
 
         #endregion
+    }
+
+    /// <summary>
+    /// 玩家属性枚举
+    /// </summary>
+    public enum E_PlayerProperty
+    {
+        Health, //健康
+        Hydration, //水分
+        Satiety, //饱食度
+        Carbohydrates, //碳水化合物
+        Fat, //脂肪
+        Protein, //蛋白质
+        Energy //能量
     }
 }

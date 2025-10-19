@@ -102,7 +102,7 @@ namespace CoreComponents
             _velocity.x = direction.x;
             _velocity.z = direction.y;
             float speed = 0f;
-            E_MovementActions currentAction = _animatorOperate.GetCurrentPosture();
+            E_MovementActions currentAction = _animatorOperate.GetCurrentMoveAction();
             speed = _movementCost.GetMovementSpeed(
                 _movementCost.CanTakeMove(currentAction, _movementData.Energy)
                     ? currentAction
@@ -112,9 +112,14 @@ namespace CoreComponents
             // 应用重力
             ApplyGravity();
 
+
+            // //调试
+            // Debug.Log($"Current Action: {currentAction}+" +
+            //           $"{_movementCost.CanTakeMove(currentAction, _movementData.Energy)}+" +
+            //           $"{speed}");
+
             // 移动角色
             cc.Move(_velocity * (Time.deltaTime * 5f));
-            // Debug.Log(_velocity);
             _velocity = Vector3.zero;
         }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942ad40419be4253992d27d650e6adbe, type: 3}
   m_Name: Run
   m_EditorClassIdentifier: 
-  movementActions: 4
+  movementActions: 8
   movementSpeed: 5.5
   energyConsumptionPreSecond: 0.5
   hydrationConsumptionPreSecond: 0.1

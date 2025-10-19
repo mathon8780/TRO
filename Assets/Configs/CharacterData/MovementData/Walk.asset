@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942ad40419be4253992d27d650e6adbe, type: 3}
   m_Name: Walk
   m_EditorClassIdentifier: 
-  movementActions: 3
+  movementActions: 7
   movementSpeed: 1.4
   energyConsumptionPreSecond: 0
   hydrationConsumptionPreSecond: 0
