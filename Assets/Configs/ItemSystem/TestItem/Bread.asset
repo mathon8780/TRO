@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e1da4a5a81042599e5da07d1166170c, type: 3}
-  m_Name: New Item
+  m_Script: {fileID: 11500000, guid: 74db260d2c0844efad10429d790187de, type: 3}
+  m_Name: Bread
   m_EditorClassIdentifier: 
-  itemId: 
-  itemName: 
-  description: 
+  itemId: 1001
+  itemName: Bread
+  description: "\u8FD9\u662F\u4E00\u4E2A\u9762\u5305"
+  weight: 0.3
+  canStack: 1
   icon: {fileID: 0}
-  weight: 0
-  volume: 0
-  maxStack: 1
-  maxDurability: 100
-  behaviors: []
+  iconLoadKey: Bread
+  resourceLoadKey: Bread
+  behaviorTypes: 00000000

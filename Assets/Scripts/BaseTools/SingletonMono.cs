@@ -4,12 +4,17 @@ namespace BaseTools
 {
     public class SingletonMono<T> : MonoBehaviour where T : Component
     {
+        private static bool _inDestroying = false;
         private static T _instance;
 
         public static T Instance
         {
             get
             {
+                if (_inDestroying)
+                    return null;
+
+
                 if (_instance == null)
                 {
                     // 尝试在场景中查找已存在的实例
@@ -52,6 +57,7 @@ namespace BaseTools
         /// </summary>
         protected virtual void OnDestroy()
         {
+            _inDestroying = true;
             if (_instance == this)
             {
                 _instance = null;
