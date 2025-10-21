@@ -56,39 +56,39 @@ namespace CoreComponents
 
         private void UpdateNutritionData()
         {
-            StateInfo stateInfo = new StateInfo();
+            EveStateInfo eveStateInfo = new EveStateInfo();
 
-            stateInfo.State = E_PlayerProperty.Health;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Health;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHealth;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
-            stateInfo.State = E_PlayerProperty.Hydration;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Hydration;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHydration;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            eveStateInfo.State = E_PlayerProperty.Health;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Health;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHealth;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
+            eveStateInfo.State = E_PlayerProperty.Hydration;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Hydration;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxHydration;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
             //饱食度 = 碳水化合物 * 0.5 + 脂肪 * 0.3 + 蛋白质 * 0.2
-            stateInfo.State = E_PlayerProperty.Satiety;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates * 0.5f +
-                                     _runTimeNutritionAndMobilityData.Fat * 0.3f +
-                                     _runTimeNutritionAndMobilityData.Protein * 0.2f;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxSatiety;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
-            stateInfo.State = E_PlayerProperty.Carbohydrates;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxCarbohydrates;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
-            stateInfo.State = E_PlayerProperty.Fat;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Fat;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxFat;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
-            stateInfo.State = E_PlayerProperty.Protein;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Protein;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxProtein;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
-            stateInfo.State = E_PlayerProperty.Energy;
-            stateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Energy;
-            stateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxEnergy;
-            EventCenter.Instance?.TriggerEvent<StateInfo>(stateInfo);
+            eveStateInfo.State = E_PlayerProperty.Satiety;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates * 0.5f +
+                                        _runTimeNutritionAndMobilityData.Fat * 0.3f +
+                                        _runTimeNutritionAndMobilityData.Protein * 0.2f;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxSatiety;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
+            eveStateInfo.State = E_PlayerProperty.Carbohydrates;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Carbohydrates;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxCarbohydrates;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
+            eveStateInfo.State = E_PlayerProperty.Fat;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Fat;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxFat;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
+            eveStateInfo.State = E_PlayerProperty.Protein;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Protein;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxProtein;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
+            eveStateInfo.State = E_PlayerProperty.Energy;
+            eveStateInfo.CurrentValue = _runTimeNutritionAndMobilityData.Energy;
+            eveStateInfo.MaxValue = _runTimeNutritionAndMobilityData.MaxEnergy;
+            EventCenter.Instance?.TriggerEvent<EveStateInfo>(eveStateInfo);
         }
 
         #endregion

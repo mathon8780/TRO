@@ -2,7 +2,11 @@
 
 namespace UI.EventType
 {
-    public class StateInfo
+    /// <summary>
+    /// Property
+    /// 状态信息
+    /// </summary>
+    public class EveStateInfo
     {
         public E_PlayerProperty State;
         public float CurrentValue;

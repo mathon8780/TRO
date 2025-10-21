@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace ItemInventory
 {
+    /// <summary>
+    /// 物品基础信息
+    /// </summary>
     [CreateAssetMenu(fileName = "New Item", menuName = "Item/Item Info", order = 0)]
     public class ItemBaseInfo : ScriptableObject
     {

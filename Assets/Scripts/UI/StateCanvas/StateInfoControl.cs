@@ -18,7 +18,7 @@ namespace UI.StateCanvas
         [SerializeField] private Text numericalDisplayText;
         [SerializeField] private Image fillImage;
 
-        private Vector2 OffsetPosition = new Vector2(240f, 0f);
+        private readonly Vector2 _offsetPosition = new Vector2(240f, 0f);
 
 
         private void Awake()
@@ -32,7 +32,7 @@ namespace UI.StateCanvas
             if (!numericalDisplayText)
                 numericalDisplayText = GetComponent<Text>();
 
-            percentageDisplayText.rectTransform.anchoredPosition += OffsetPosition;
+            numericalDisplayText.rectTransform.anchoredPosition -= _offsetPosition;
         }
 
         public void Init(E_PlayerProperty state)
@@ -59,25 +59,25 @@ namespace UI.StateCanvas
 
         private void OnEnable()
         {
-            EventCenter.Instance.AddListener<StateInfo>(UpdateStateInfo);
+            EventCenter.Instance.AddListener<EveStateInfo>(UpdateStateInfo);
         }
 
         private void OnDisable()
         {
-            EventCenter.Instance?.RemoveListener<StateInfo>(UpdateStateInfo);
+            EventCenter.Instance?.RemoveListener<EveStateInfo>(UpdateStateInfo);
         }
 
         /// <summary>
         /// 更新状态信息
         /// </summary>
-        /// <param name="stateInfo"></param>
-        private void UpdateStateInfo(StateInfo stateInfo)
+        /// <param name="eveStateInfo"></param>
+        private void UpdateStateInfo(EveStateInfo eveStateInfo)
         {
-            if (stateInfo.State != _state)
+            if (eveStateInfo.State != _state)
                 return;
 
-            float currentValue = stateInfo.CurrentValue;
-            float maxValue = stateInfo.MaxValue;
+            float currentValue = eveStateInfo.CurrentValue;
+            float maxValue = eveStateInfo.MaxValue;
 
             // 更新 Slider 数值
             slider.maxValue = maxValue;
@@ -121,17 +121,16 @@ namespace UI.StateCanvas
             }
         }
 
-
         public void OnPointerEnter(PointerEventData eventData)
         {
-            percentageDisplayText.rectTransform.anchoredPosition -= OffsetPosition;
-            numericalDisplayText.rectTransform.anchoredPosition += OffsetPosition;
+            percentageDisplayText.rectTransform.anchoredPosition -= _offsetPosition;
+            numericalDisplayText.rectTransform.anchoredPosition += _offsetPosition;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            percentageDisplayText.rectTransform.anchoredPosition += OffsetPosition;
-            numericalDisplayText.rectTransform.anchoredPosition -= OffsetPosition;
+            percentageDisplayText.rectTransform.anchoredPosition += _offsetPosition;
+            numericalDisplayText.rectTransform.anchoredPosition -= _offsetPosition;
         }
     }
 }

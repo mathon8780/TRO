@@ -2,6 +2,7 @@ using CoreComponents.DataRecord;
 using CoreListener;
 using DataStructure;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CoreComponents
 {
@@ -12,7 +13,7 @@ namespace CoreComponents
     {
         #region Component References
 
-        [SerializeField] private CharacterController cc; // 角色控制器
+        [SerializeField] private CharacterController controller; // 角色控制器
         [SerializeField] private Animator animator; // 动画控制器
 
         #endregion
@@ -33,10 +34,10 @@ namespace CoreComponents
 
         private void Awake()
         {
-            if (cc == null)
+            if (controller == null)
             {
-                cc = GetComponent<CharacterController>();
-                if (cc == null)
+                controller = GetComponent<CharacterController>();
+                if (controller == null)
                 {
                     Debug.LogError("CharacterController component is missing.");
                 }
@@ -119,7 +120,7 @@ namespace CoreComponents
             //           $"{speed}");
 
             // 移动角色
-            cc.Move(_velocity * (Time.deltaTime * 5f));
+            controller.Move(_velocity * (Time.deltaTime * 5f));
             _velocity = Vector3.zero;
         }
 
@@ -157,7 +158,7 @@ namespace CoreComponents
 
         private void ApplyGravity()
         {
-            if (cc.isGrounded)
+            if (controller.isGrounded)
             {
                 _velocity.y = -1f; // 保持角色贴地
                 return;
