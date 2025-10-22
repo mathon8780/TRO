@@ -17,7 +17,9 @@ namespace UI.NearbyItemCanvas
 
         private List<INearbyContainerInteract> _displayContainersStore; // 显示容器的空闲池
         private List<INearbyContainerInteract> _displayContainersInUse; // 正在使用的显示容器列表
+        private INearbyContainerInteract _groundContainer; // 地面容器交互接口
         private INearbyContainerInteract _currentDisplayContainer; // 当前显示的容器交互接口
+
 
         private void Awake()
         {
@@ -30,14 +32,12 @@ namespace UI.NearbyItemCanvas
         {
             EventCenter.Instance.AddListener<EventNearbyContainer>(CloseToContainer);
             EventCenter.Instance.AddListener<EventNearbyContainer>(AwayFromContainer);
-            EventCenter.Instance.AddListener<EventNearbyDisplayContainerItems>(GetCurrentDisplayContainer);
         }
 
         private void OnDisable()
         {
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(CloseToContainer);
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(AwayFromContainer);
-            EventCenter.Instance?.RemoveListener<EventNearbyDisplayContainerItems>(GetCurrentDisplayContainer);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace UI.NearbyItemCanvas
         /// </summary>
         private void CloseToContainer(EventNearbyContainer containerItem)
         {
-            if (!ParameterCheck(containerItem, E_NearbyContainerInteractType.CloseToContainer))
+            if (!ContainerParameterCheck(containerItem, true))
             {
                 return;
             }
@@ -80,7 +80,7 @@ namespace UI.NearbyItemCanvas
         /// </summary>
         private void AwayFromContainer(EventNearbyContainer containerItem)
         {
-            if (!ParameterCheck(containerItem, E_NearbyContainerInteractType.AwayFromContainer))
+            if (!ContainerParameterCheck(containerItem, false))
             {
                 return;
             }
@@ -88,7 +88,7 @@ namespace UI.NearbyItemCanvas
             // todo: Add：如果一个正在显示的容器离开了范围 清除对应的内容 并切换到地面容器
             if (containerItem.ContainerItem == _currentDisplayContainer.GetContainer())
             {
-                EventCenter.Instance.TriggerEvent(typeof(EventNearbySwitchToGroundContainer));
+                _groundContainer.DisplayContainerInfo(_groundContainer.GetContainer());
             }
 
             // 在显示列表中查找对应容器
@@ -116,9 +116,20 @@ namespace UI.NearbyItemCanvas
             }
         }
 
-        private void GetCurrentDisplayContainer(EventNearbyDisplayContainerItems currentContainer)
+
+        /// <summary>
+        /// 靠近物品
+        /// </summary>
+        private void CloseToItem(EventNearbyItem worldItem)
         {
-            _currentDisplayContainer = currentContainer.ContainerItemInteract;
+            //todo:物品放入容器后 对容器内容的更新
+        }
+
+        /// <summary>
+        /// 远离物品
+        /// </summary>
+        private void AwayFromItem(EventNearbyItem worldItem)
+        {
         }
 
 
@@ -128,7 +139,7 @@ namespace UI.NearbyItemCanvas
         /// <param name="containerItem">交互传递内容</param>
         /// <param name="expectedType">目标枚举</param>
         /// <returns></returns>
-        private bool ParameterCheck(EventNearbyContainer containerItem, E_NearbyContainerInteractType expectedType)
+        private bool ContainerParameterCheck(EventNearbyContainer containerItem, bool expectedType)
         {
             // 预制体非空 显示区域非空 传入参数非空 物品BaseInfo非空 物品类型为容器 物品实例非空
             if (containerPrefab == null)
@@ -143,9 +154,9 @@ namespace UI.NearbyItemCanvas
                 return false;
             }
 
-            if (containerItem == null || containerItem.InteractTypeType != expectedType)
+            if (containerItem == null || containerItem.IsClose != expectedType)
             {
-                Debug.LogError($"Container item is null or type is wrong containerItem: {containerItem} + type: {containerItem.InteractTypeType} .");
+                Debug.LogError($"Container item is null or type is wrong containerItem: {containerItem} + type: {containerItem.IsClose} .");
                 return false;
             }
 

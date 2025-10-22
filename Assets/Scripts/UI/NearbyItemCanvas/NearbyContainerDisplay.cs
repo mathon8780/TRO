@@ -27,7 +27,7 @@ namespace UI.NearbyItemCanvas
         }
 
         /// <summary>
-        /// 靠近容器
+        /// 显示容器信息
         /// </summary>
         /// <param name="containerItem"></param>
         public void DisplayContainerInfo(Item containerItem)

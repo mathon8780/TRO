@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using CoreListener;
 using ItemInventory;
@@ -16,7 +15,6 @@ namespace UI.NearbyItemCanvas
         [SerializeField] private RectTransform itemsContent; // 物品内容区域
         [SerializeField] private GameObject itemPrefab; // 物品UI预制体
 
-        private INearbyContainerInteract _groundContainer; // 地面容器交互接口
         private INearbyContainerInteract _currentOpenContainer; // 当前打开的容器
         private List<INearbyItemInteract> _displayItems; // 当前显示的物品
 
@@ -40,14 +38,12 @@ namespace UI.NearbyItemCanvas
         private void OnEnable()
         {
             EventCenter.Instance.AddListener<EventNearbyDisplayContainerItems>(DisplayItems);
-            EventCenter.Instance.AddListener<EventNearbySwitchToGroundContainer>(DisplayGroundItems);
             EventCenter.Instance.AddListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
         }
 
         private void OnDisable()
         {
             EventCenter.Instance?.RemoveListener<EventNearbyDisplayContainerItems>(DisplayItems);
-            EventCenter.Instance?.RemoveListener<EventNearbySwitchToGroundContainer>(DisplayGroundItems);
             EventCenter.Instance?.RemoveListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
         }
 
@@ -77,24 +73,6 @@ namespace UI.NearbyItemCanvas
             ClearDisplayInfo();
             // 显示新的物品列表
             DisplayItemInfo(containerItem.ItemInstance.ContainedItems);
-        }
-
-        /// <summary>
-        /// 内容显示切换至地面容器
-        /// </summary>
-        /// <param name="groundContainer"></param>
-        private void DisplayGroundItems(EventNearbySwitchToGroundContainer groundContainer)
-        {
-            if (_groundContainer == null)
-            {
-                Debug.LogError("Ground container is not set.");
-                return;
-            }
-
-            // 清空当前显示的物品
-            ClearDisplayInfo();
-            // 显示地面容器中的物品
-            DisplayItemInfo(_groundContainer.GetContainer().ItemInstance.ContainedItems);
         }
 
 

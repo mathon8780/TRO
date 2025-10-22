@@ -8,16 +8,17 @@ namespace UI.EventType
     /// </summary>
     public class EventNearbyContainer
     {
-        public E_NearbyContainerInteractType InteractTypeType;
+        public bool IsClose;
         public Item ContainerItem;
     }
 
     /// <summary>
-    /// 容器交互类型
+    /// Nearby Event
+    /// 物品交互事件
     /// </summary>
-    public enum E_NearbyContainerInteractType
+    public class EventNearbyItem
     {
-        CloseToContainer, // 靠近容器
-        AwayFromContainer, // 远离容器
+        public bool IsClose;
+        public Item WorldItem;
     }
 }
