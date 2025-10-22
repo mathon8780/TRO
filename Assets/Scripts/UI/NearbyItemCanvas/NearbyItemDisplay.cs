@@ -59,10 +59,12 @@ namespace UI.NearbyItemCanvas
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            // 显示物品信息悬浮窗
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            // 隐藏物品信息悬浮窗
         }
     }
 }

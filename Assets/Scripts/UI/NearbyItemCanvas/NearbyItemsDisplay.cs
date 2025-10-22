@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using CoreListener;
 using ItemInventory;
+using UI.EventType;
 using UnityEngine;
 
 namespace UI.NearbyItemCanvas
@@ -10,33 +13,63 @@ namespace UI.NearbyItemCanvas
     /// </summary>
     public class NearbyItemsDisplay : MonoBehaviour
     {
-        [SerializeField] private RectTransform itemsContent; // 容器内容区域
-        [SerializeField] private GameObject itemPrefab; // 容器预制体
+        [SerializeField] private RectTransform itemsContent; // 物品内容区域
+        [SerializeField] private GameObject itemPrefab; // 物品UI预制体
 
+        private INearbyContainerInteract _groundContainer; // 地面容器交互接口
         private INearbyContainerInteract _currentOpenContainer; // 当前打开的容器
         private List<INearbyItemInteract> _displayItems; // 当前显示的物品
 
 
+        private bool _isDisplayDitalItemInfo = false; // 是否正在显示物品详细信息
+
+        private void Awake()
+        {
+            // 初始化显示物品列表
+            _displayItems ??= new List<INearbyItemInteract>(20);
+        }
+
+        private void Update()
+        {
+            if (_isDisplayDitalItemInfo)
+            {
+                // 更新物品详细信息列表
+            }
+        }
+
+        private void OnEnable()
+        {
+            EventCenter.Instance.AddListener<EventNearbyDisplayContainerItems>(DisplayItems);
+            EventCenter.Instance.AddListener<EventNearbySwitchToGroundContainer>(DisplayGroundItems);
+            EventCenter.Instance.AddListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
+        }
+
+        private void OnDisable()
+        {
+            EventCenter.Instance?.RemoveListener<EventNearbyDisplayContainerItems>(DisplayItems);
+            EventCenter.Instance?.RemoveListener<EventNearbySwitchToGroundContainer>(DisplayGroundItems);
+            EventCenter.Instance?.RemoveListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
+        }
+
         /// <summary>
         /// 展示对应容器中的物品
         /// </summary>
-        /// <param name="containerInteract">容器交互接口</param>
-        private void DisplayItems(INearbyContainerInteract containerInteract)
+        /// <param name="containerContext">容器交互接口</param>
+        private void DisplayItems(EventNearbyDisplayContainerItems containerContext)
         {
-            if (containerInteract == null)
+            if (containerContext == null)
             {
                 return;
             }
 
-            if (!ParameterCheck(containerInteract.GetContainerItem()))
-            {
+            if (!ParameterCheck(containerContext.ContainerItemInteract.GetContainer()))
                 return;
-            }
 
-            Item containerItem = containerInteract.GetContainerItem();
+
+            Item containerItem = containerContext.ContainerItemInteract.GetContainer();
 
             // 切换的容器为当前显示的容器 跳过显示
-            if (containerItem == _currentOpenContainer.GetContainerItem())
+            if (containerItem == _currentOpenContainer.GetContainer())
                 return;
 
 
@@ -46,14 +79,30 @@ namespace UI.NearbyItemCanvas
             DisplayItemInfo(containerItem.ItemInstance.ContainedItems);
         }
 
+        /// <summary>
+        /// 内容显示切换至地面容器
+        /// </summary>
+        /// <param name="groundContainer"></param>
+        private void DisplayGroundItems(EventNearbySwitchToGroundContainer groundContainer)
+        {
+            if (_groundContainer == null)
+            {
+                Debug.LogError("Ground container is not set.");
+                return;
+            }
+
+            // 清空当前显示的物品
+            ClearDisplayInfo();
+            // 显示地面容器中的物品
+            DisplayItemInfo(_groundContainer.GetContainer().ItemInstance.ContainedItems);
+        }
+
 
         /// <summary>
         /// 清除物品显示面板的信息 用于下一次显示时的复用
         /// </summary>
         private void ClearDisplayInfo()
         {
-            _displayItems ??= new List<INearbyItemInteract>(20);
-
             foreach (var itemInteract in _displayItems)
             {
                 // 清除显示内容并隐藏
@@ -111,6 +160,11 @@ namespace UI.NearbyItemCanvas
         {
             //todo:完善检测内容
             return true;
+        }
+
+        private void OnDisplayItemDetailInfo(EventNearbyDisplayDitalItemInfo eventData)
+        {
+            _isDisplayDitalItemInfo = eventData.Display;
         }
     }
 }

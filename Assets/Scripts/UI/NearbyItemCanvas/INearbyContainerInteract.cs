@@ -9,10 +9,9 @@ namespace UI.NearbyItemCanvas
     /// </summary>
     public interface INearbyContainerInteract : IPointerClickHandler
     {
-        void CloseToContainer(Item containerItem);
-        void AwayFromContainer();
-        void OpenContainer(Item containerItem);
-        void CloseContainer(Item containerItem);
-        Item GetContainerItem();
+        void DisplayContainerInfo(Item containerItem);
+        void HideContainerInfo();
+        void ClearContainerInfo();
+        Item GetContainer();
     }
 }

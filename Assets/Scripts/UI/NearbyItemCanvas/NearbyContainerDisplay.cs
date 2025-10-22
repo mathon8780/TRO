@@ -13,9 +13,9 @@ namespace UI.NearbyItemCanvas
     /// </summary>
     public class NearbyContainerDisplay : MonoBehaviour, INearbyContainerInteract
     {
-        private Image _containerIcon;
-        private Item _containerItem;
-        private EveNearbyContainerItemsDisplay _containerItemsDisplayEvent;
+        private Image _containerIcon; // 容器图标
+        private Item _containerItem; // 容器信息
+        private EventNearbyDisplayContainerItems _displayContainerItemsEvent;
 
         private void Awake()
         {
@@ -30,7 +30,7 @@ namespace UI.NearbyItemCanvas
         /// 靠近容器
         /// </summary>
         /// <param name="containerItem"></param>
-        public void CloseToContainer(Item containerItem)
+        public void DisplayContainerInfo(Item containerItem)
         {
             if (containerItem == null || containerItem.ID == 0)
             {
@@ -49,31 +49,37 @@ namespace UI.NearbyItemCanvas
                 }
             }
 
+            // 初始化显示信息
             _containerIcon.sprite = containerItem.BaseInfo.icon;
             gameObject.name = containerItem.BaseInfo.name;
             _containerItem = containerItem;
-            _containerItemsDisplayEvent = new EveNearbyContainerItemsDisplay(_containerItem);
+            _displayContainerItemsEvent = new EventNearbyDisplayContainerItems(this);
         }
 
         /// <summary>
         /// 远离容器
         /// </summary>
-        public void AwayFromContainer()
+        public void HideContainerInfo()
         {
             Destroy(gameObject);
         }
 
-        public void OpenContainer(Item containerItem)
+        /// <summary>
+        /// 清除容器显示信息 用于下一次显示时的复用
+        /// </summary>
+        public void ClearContainerInfo()
         {
-            //暂时无用
+            _containerIcon.sprite = null;
+            gameObject.name = "Nearby_ContainerInteract";
+            _containerItem = null;
+            _displayContainerItemsEvent = null;
         }
 
-        public void CloseContainer(Item containerItem)
-        {
-            //暂时无用
-        }
-
-        public Item GetContainerItem()
+        /// <summary>
+        /// 获取容器
+        /// </summary>
+        /// <returns></returns>
+        public Item GetContainer()
         {
             return _containerItem;
         }
@@ -86,8 +92,9 @@ namespace UI.NearbyItemCanvas
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                EventCenter.Instance.TriggerEvent<EveNearbyContainerItemsDisplay>(_containerItemsDisplayEvent);
+                EventCenter.Instance.TriggerEvent<EventNearbyDisplayContainerItems>(_displayContainerItemsEvent);
             }
+            // todo: 右键部分容器 类似于各类背包 可以将对应的背包直接装备到身上
         }
     }
 }
