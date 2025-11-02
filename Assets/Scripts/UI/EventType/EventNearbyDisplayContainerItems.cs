@@ -1,5 +1,4 @@
-﻿using ItemInventory;
-using UI.NearbyItemCanvas;
+﻿using UI.NearbyItemCanvas;
 
 namespace UI.EventType
 {

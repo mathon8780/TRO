@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CoreListener;
-using ItemInventory;
 using UI.EventType;
 using UnityEngine;
 
@@ -20,24 +19,84 @@ namespace UI.NearbyItemCanvas
         private INearbyContainerInteract _groundContainer; // 地面容器交互接口
         private INearbyContainerInteract _currentDisplayContainer; // 当前显示的容器交互接口
 
+        #region Life Func
 
         private void Awake()
         {
             // 初始化显示容器列表
             _displayContainersStore ??= new List<INearbyContainerInteract>(10);
             _displayContainersInUse ??= new List<INearbyContainerInteract>(10);
+            InitGroundContainer();
         }
+
 
         private void OnEnable()
         {
             EventCenter.Instance.AddListener<EventNearbyContainer>(CloseToContainer);
             EventCenter.Instance.AddListener<EventNearbyContainer>(AwayFromContainer);
+            EventCenter.Instance.AddListener<EventNearbyItem>(CloseToItem);
+            EventCenter.Instance.AddListener<EventNearbyItem>(AwayFromItem);
         }
 
         private void OnDisable()
         {
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(CloseToContainer);
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(AwayFromContainer);
+            EventCenter.Instance?.AddListener<EventNearbyItem>(CloseToItem);
+            EventCenter.Instance?.RemoveListener<EventNearbyItem>(AwayFromItem);
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// 添加地面容器交互接口
+        /// </summary>
+        private void InitGroundContainer()
+        {
+            //todo: 创建地面容器
+
+            // ItemBaseInfo groundBaseInfo = ScriptableObject.CreateInstance<ItemBaseInfo>();
+            // groundBaseInfo.itemId = 1;
+            // groundBaseInfo.itemName = "Ground";
+            // groundBaseInfo.itemType = E_ItemType.ItemContainer;
+            // groundBaseInfo.resourceLoadKey = "Ground";
+            // groundBaseInfo.behaviorTypes = new E_ItemBehaviorType[1];
+            // groundBaseInfo.behaviorTypes[0] = E_ItemBehaviorType.ContainerInteract;
+            // // ItemBaseInfo groundItemInfo = ScriptableObject.CreateInstance<ItemBaseInfo>();
+            // // groundItemInfo.itemId = 1;
+            // // groundItemInfo.itemName = "Ground";
+            // // groundItemInfo.itemType = E_ItemType.ItemContainer;
+            // // groundItemInfo.canStack = false;
+            // // groundItemInfo.behaviorTypes = new[]
+            // // {
+            // //     E_ItemBehaviorType.ContainerInteract,
+            // // };
+            // StItemContainer groundDyItemStaticInfo = new StItemContainer
+            // {
+            //     ID = 1,
+            //     MaxWeight = 999999
+            // };
+            // DyItemContainer groundDyItemDynamicInfo = new DyItemContainer
+            // {
+            //     ID = 1,
+            //     Inventory = new List<Item>(50)
+            // };
+            //
+            // Item groundItemContainer = new Item()
+            // {
+            //     ID = 1,
+            //     StackNum = 1,
+            //     ItemBaseInfo = groundBaseInfo,
+            //     ItemStaticInfo = groundDyItemStaticInfo,
+            //     ItemDynamicInfo = groundDyItemDynamicInfo,
+            // };
+
+
+            GameObject obj = Instantiate(containerPrefab, containerContent);
+            _groundContainer = obj.GetComponent<INearbyContainerInteract>();
+            // _groundContainer.LoadContainerInfo(groundItemContainer);
+            _currentDisplayContainer = _groundContainer;
         }
 
         /// <summary>
@@ -71,7 +130,7 @@ namespace UI.NearbyItemCanvas
             }
 
             // 显示容器信息 加入使用中列表
-            interact.DisplayContainerInfo(containerItem.ContainerItem);
+            interact.LoadContainerInfo(containerItem.ContainerItem);
             _displayContainersInUse.Add(interact);
         }
 
@@ -88,7 +147,7 @@ namespace UI.NearbyItemCanvas
             // todo: Add：如果一个正在显示的容器离开了范围 清除对应的内容 并切换到地面容器
             if (containerItem.ContainerItem == _currentDisplayContainer.GetContainer())
             {
-                _groundContainer.DisplayContainerInfo(_groundContainer.GetContainer());
+                _groundContainer.LoadContainerInfo(_groundContainer.GetContainer());
             }
 
             // 在显示列表中查找对应容器
@@ -107,7 +166,7 @@ namespace UI.NearbyItemCanvas
             {
                 // 清理 隐藏 回收
                 targetInteract.ClearContainerInfo(); // 清除数据（如物品列表引用）
-                targetInteract.HideContainerInfo(); // 隐藏UI
+                targetInteract.UnloadContainerInfo(); // 隐藏UI
                 _displayContainersStore.Add(targetInteract);
             }
             else
@@ -116,13 +175,22 @@ namespace UI.NearbyItemCanvas
             }
         }
 
-
         /// <summary>
         /// 靠近物品
         /// </summary>
         private void CloseToItem(EventNearbyItem worldItem)
         {
             //todo:物品放入容器后 对容器内容的更新
+
+            if (!ItemParameterCheck(worldItem, true)) return;
+
+            if (_groundContainer == null)
+            {
+                Debug.LogError("Ground container is not assigned.");
+                return;
+            }
+
+            _groundContainer.LoadContainerInfo(_groundContainer.GetContainer());
         }
 
         /// <summary>
@@ -130,16 +198,18 @@ namespace UI.NearbyItemCanvas
         /// </summary>
         private void AwayFromItem(EventNearbyItem worldItem)
         {
+            if (!ItemParameterCheck(worldItem, false))
+                return;
         }
 
 
         /// <summary>
-        /// 参数合法性检查
+        /// 容器参数合法性检查
         /// </summary>
         /// <param name="containerItem">交互传递内容</param>
-        /// <param name="expectedType">目标枚举</param>
+        /// <param name="expectedOp">目标操作</param>
         /// <returns></returns>
-        private bool ContainerParameterCheck(EventNearbyContainer containerItem, bool expectedType)
+        private bool ContainerParameterCheck(EventNearbyContainer containerItem, bool expectedOp)
         {
             // 预制体非空 显示区域非空 传入参数非空 物品BaseInfo非空 物品类型为容器 物品实例非空
             if (containerPrefab == null)
@@ -154,34 +224,51 @@ namespace UI.NearbyItemCanvas
                 return false;
             }
 
-            if (containerItem == null || containerItem.IsClose != expectedType)
+            if (containerItem == null || containerItem.IsClose != expectedOp)
             {
                 Debug.LogError($"Container item is null or type is wrong containerItem: {containerItem} + type: {containerItem.IsClose} .");
                 return false;
             }
 
-            if (containerItem.ContainerItem.BaseInfo == null)
+            if (containerItem.ContainerItem.ItemData == null)
             {
                 Debug.Log("Container item base info is null.");
                 //todo:通过ID获取BaseInfo
-                if (containerItem.ContainerItem.BaseInfo == null)
+                if (containerItem.ContainerItem.ItemData == null)
                 {
                     Debug.LogError("Container item base info is still null after attempting to retrieve by ID.");
                     return false;
                 }
             }
 
-            if (containerItem.ContainerItem.BaseInfo.itemType != E_ItemType.ItemContainer)
+
+            return true;
+        }
+
+        /// <summary>
+        /// 物体参数合法性检查
+        /// </summary>
+        /// <param name="worldItem">交互传递内容</param>
+        /// <param name="expectedOp">目标操作</param>
+        /// <returns></returns>
+        private bool ItemParameterCheck(EventNearbyItem worldItem, bool expectedOp)
+        {
+            if (worldItem == null || worldItem.IsClose != expectedOp)
             {
-                Debug.LogError("The provided item is not a container type.");
+                Debug.LogError("World item is null or type is wrong.");
                 return false;
             }
 
-            if (containerItem.ContainerItem.ItemInstance == null)
+            if (worldItem.WorldItem.ItemData == null)
             {
-                Debug.LogError("Container item instance is null.");
-                return false;
+                Debug.LogError("World item base info is null.");
+                if (worldItem.WorldItem.ItemData == null)
+                {
+                    Debug.LogError("World item base info is still null after attempting to retrieve by ID.");
+                    return false;
+                }
             }
+
 
             return true;
         }

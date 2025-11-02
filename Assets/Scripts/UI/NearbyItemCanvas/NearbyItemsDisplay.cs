@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using CoreListener;
-using ItemInventory;
+using Inventory;
 using UI.EventType;
 using UnityEngine;
 
@@ -71,8 +71,9 @@ namespace UI.NearbyItemCanvas
 
             // 清空当前显示的物品
             ClearDisplayInfo();
-            // 显示新的物品列表
-            DisplayItemInfo(containerItem.ItemInstance.ContainedItems);
+            // todo:显示新的物品列表
+
+            // DisplayItemInfo((containerItem.ItemDynamicInfo as DyItemContainer)?.Inventory);
         }
 
 

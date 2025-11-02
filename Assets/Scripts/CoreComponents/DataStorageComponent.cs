@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CoreComponents.DataRecord;
 using CoreListener;
 using DataStructure;
 using UI.EventType;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.Serialization;
 
 
 namespace CoreComponents
 {
+    /// <summary>
+    /// 数据管理组件
+    /// </summary>
     public class DataStorageComponent : MonoBehaviour
     {
         #region Serialized Fields

@@ -1,4 +1,4 @@
-﻿using ItemInventory;
+﻿using Inventory;
 
 namespace UI.EventType
 {

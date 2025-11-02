@@ -1,4 +1,4 @@
-﻿using ItemInventory;
+﻿using Inventory;
 using UnityEngine.EventSystems;
 
 namespace UI.NearbyItemCanvas

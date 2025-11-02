@@ -1,5 +1,5 @@
 using CoreListener;
-using ItemInventory;
+using Inventory;
 using UI.EventType;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,23 +26,41 @@ namespace UI.NearbyItemCanvas
             }
         }
 
-        /// <summary>
-        /// 显示容器信息
-        /// </summary>
-        /// <param name="containerItem"></param>
-        public void DisplayContainerInfo(Item containerItem)
+        public void EnterContainer(Item item)
         {
-            if (containerItem == null || containerItem.ID == 0)
+            // todo:重写靠近物品容器的逻辑
+
+            // ItemInteractiveContext context = new ItemInteractiveContext
+            // {
+            //     BehaviorType = E_ItemBehaviorType.ContainerInteract,
+            //     Item = item,
+            //     TargetItemContainer = _containerItem
+            // };
+            // bool isRight = ItemBehaviorCenter.Instance.ExistBehavior(context);
+            // todo:添加 若当前显示的容器为该容器 则刷新物品列表 以显示新的物品内容
+        }
+
+        public void ExitContainer(Item item)
+        {
+        }
+
+        /// <summary>
+        /// 初始化容器信息
+        /// </summary>
+        /// <param name="containerItem">容器内容</param>
+        public void LoadContainerInfo(Item containerItem)
+        {
+            if (containerItem == null || containerItem.ItemID == 0)
             {
                 Debug.LogError("Container item or its ID is null.");
                 return;
             }
 
-            if (containerItem.BaseInfo == null)
+            if (containerItem.ItemData == null)
             {
                 // todo:加载基础资源
                 // 资源加载后依旧为空 则报错
-                if (containerItem.BaseInfo == null)
+                if (containerItem.ItemData == null)
                 {
                     Debug.LogError("Container item's BaseInfo is null.");
                     return;
@@ -50,18 +68,19 @@ namespace UI.NearbyItemCanvas
             }
 
             // 初始化显示信息
-            _containerIcon.sprite = containerItem.BaseInfo.icon;
-            gameObject.name = containerItem.BaseInfo.name;
+            // _containerIcon.sprite = containerItem.BaseInfo.icon;
+            gameObject.SetActive(true);
+            gameObject.name = containerItem.ItemData.itemName;
             _containerItem = containerItem;
             _displayContainerItemsEvent = new EventNearbyDisplayContainerItems(this);
         }
 
         /// <summary>
-        /// 远离容器
+        /// 清除容器信息
         /// </summary>
-        public void HideContainerInfo()
+        public void UnloadContainerInfo()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -81,7 +100,13 @@ namespace UI.NearbyItemCanvas
         /// <returns></returns>
         public Item GetContainer()
         {
-            return _containerItem;
+            if (gameObject.activeSelf && _containerItem != null)
+            {
+                return _containerItem;
+            }
+
+            Debug.LogError($"UI-Container is {gameObject.activeSelf} and {_containerItem == null}");
+            return null;
         }
 
         /// <summary>

@@ -2,7 +2,6 @@ using CoreComponents.DataRecord;
 using CoreListener;
 using DataStructure;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CoreComponents
 {

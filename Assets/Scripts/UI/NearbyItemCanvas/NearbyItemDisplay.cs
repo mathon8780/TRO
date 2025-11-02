@@ -1,4 +1,4 @@
-using ItemInventory;
+using Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,9 +18,9 @@ namespace UI.NearbyItemCanvas
 
         public void DisplayItemInfo(Item item)
         {
-            icon.sprite = item.BaseInfo.icon;
-            itemName.text = item.BaseInfo.name;
-            itemCount.text = item.ItemInstance.StackNum.ToString();
+            icon.sprite = item.ItemData.icon;
+            itemName.text = item.ItemData.name;
+            itemCount.text = item.ItemStackCount.ToString();
             _item = item;
         }
 

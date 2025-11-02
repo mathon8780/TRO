@@ -65,6 +65,10 @@ namespace CoreListener
             {
                 callback.Invoke(eventParam);
             }
+            else
+            {
+                Debug.Log($"事件对象{typeof(T)}不存在");
+            }
         }
     }
 }
