@@ -19,12 +19,11 @@ MonoBehaviour:
   canStack: 0
   icon: {fileID: 0}
   properties:
-  - rid: 6378236219671969808
+  - rid: 1433271829009006613
   references:
     version: 2
     RefIds:
-    - rid: 6378236219671969808
+    - rid: 1433271829009006613
       type: {class: ItemContainerPropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
       data:
         Capacity: 16
-        EncumbranceReduceRate: 0.2

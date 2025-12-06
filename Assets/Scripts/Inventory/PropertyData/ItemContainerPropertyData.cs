@@ -5,12 +5,11 @@ namespace Inventory.PropertyData
     [System.Serializable]
     public class ItemContainerPropertyData : ItemPropertyData
     {
-        public float Capacity;
-        public float EncumbranceReduceRate;
+        public float Capacity; //容量
 
         public override ItemProperty CreateProperty()
         {
-            return new ItemContainerProperty(Capacity, EncumbranceReduceRate);
+            return new ItemContainerProperty(Capacity);
         }
     }
 }

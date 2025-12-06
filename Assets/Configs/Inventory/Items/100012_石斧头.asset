@@ -19,11 +19,11 @@ MonoBehaviour:
   canStack: 0
   icon: {fileID: 0}
   properties:
-  - rid: 6378236219671969812
+  - rid: 1433271829009006617
   references:
     version: 2
     RefIds:
-    - rid: 6378236219671969812
+    - rid: 1433271829009006617
       type: {class: DurablePropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
       data:
         MaxDurability: 110

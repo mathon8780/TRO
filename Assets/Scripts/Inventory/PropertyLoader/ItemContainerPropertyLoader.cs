@@ -36,7 +36,7 @@ namespace Inventory.PropertyLoader
                     ItemContainerPropertyData propertyData = new ItemContainerPropertyData()
                     {
                         Capacity = float.Parse(values[2]),
-                        EncumbranceReduceRate = float.Parse(values[3]),
+                        // EncumbranceReduceRate = float.Parse(values[3]),
                     };
                     dic.TryAdd(id, propertyData);
                 }

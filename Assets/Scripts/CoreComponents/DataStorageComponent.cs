@@ -2,6 +2,7 @@
 using CoreComponents.DataRecord;
 using CoreListener;
 using DataStructure;
+using Inventory;
 using UI.EventType;
 using UnityEngine;
 
