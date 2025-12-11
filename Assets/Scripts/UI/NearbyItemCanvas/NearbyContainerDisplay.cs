@@ -8,10 +8,9 @@ using UnityEngine.UI;
 namespace UI.NearbyItemCanvas
 {
     /// <summary>
-    /// Nearby
-    /// 容器列表的内容显示
+    /// Nearby 容器列表的内容显示
     /// </summary>
-    public class NearbyContainerDisplay : MonoBehaviour, INearbyContainerInteract
+    public class NearbyContainerDisplay : MonoBehaviour, INearbyContainer
     {
         private Image _containerIcon; // 容器图标
         private Item _containerItem; // 容器信息
@@ -26,21 +25,15 @@ namespace UI.NearbyItemCanvas
             }
         }
 
-        public void EnterContainer(Item item)
+        #region INearbyContainer
+
+        public void ContainerEnter(Item item)
         {
             // todo:重写靠近物品容器的逻辑
-
-            // ItemInteractiveContext context = new ItemInteractiveContext
-            // {
-            //     BehaviorType = E_ItemBehaviorType.ContainerInteract,
-            //     Item = item,
-            //     TargetItemContainer = _containerItem
-            // };
-            // bool isRight = ItemBehaviorCenter.Instance.ExistBehavior(context);
             // todo:添加 若当前显示的容器为该容器 则刷新物品列表 以显示新的物品内容
         }
 
-        public void ExitContainer(Item item)
+        public void ContainerExit(Item item)
         {
         }
 
@@ -48,7 +41,7 @@ namespace UI.NearbyItemCanvas
         /// 初始化容器信息
         /// </summary>
         /// <param name="containerItem">容器内容</param>
-        public void LoadContainerInfo(Item containerItem)
+        public void InitContainer(Item containerItem)
         {
             if (containerItem == null || containerItem.ItemID == 0)
             {
@@ -68,30 +61,24 @@ namespace UI.NearbyItemCanvas
             }
 
             // 初始化显示信息
-            // _containerIcon.sprite = containerItem.BaseInfo.icon;
             gameObject.SetActive(true);
+            _containerIcon.sprite = containerItem.ItemData.icon;
             gameObject.name = containerItem.ItemData.itemName;
             _containerItem = containerItem;
+            // 创建事件缓存
             _displayContainerItemsEvent = new EventNearbyDisplayContainerItems(this);
-        }
-
-        /// <summary>
-        /// 清除容器信息
-        /// </summary>
-        public void UnloadContainerInfo()
-        {
-            gameObject.SetActive(false);
         }
 
         /// <summary>
         /// 清除容器显示信息 用于下一次显示时的复用
         /// </summary>
-        public void ClearContainerInfo()
+        public void ClearContainerContent()
         {
             _containerIcon.sprite = null;
             gameObject.name = "Nearby_ContainerInteract";
             _containerItem = null;
             _displayContainerItemsEvent = null;
+            gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -109,6 +96,8 @@ namespace UI.NearbyItemCanvas
             return null;
         }
 
+        #endregion
+
         /// <summary>
         /// 点击容器Icon显示内容
         /// </summary>
@@ -117,7 +106,8 @@ namespace UI.NearbyItemCanvas
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                EventCenter.Instance.TriggerEvent<EventNearbyDisplayContainerItems>(_displayContainerItemsEvent);
+                Debug.Log($"Click");
+                EventCenter.Instance.TriggerEvent(_displayContainerItemsEvent);
             }
             // todo: 右键部分容器 类似于各类背包 可以将对应的背包直接装备到身上
         }

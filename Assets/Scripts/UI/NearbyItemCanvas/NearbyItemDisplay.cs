@@ -6,17 +6,20 @@ using UnityEngine.UI;
 namespace UI.NearbyItemCanvas
 {
     /// <summary>
-    /// Nearby Item
-    /// 物品信息展示
+    /// Nearby Item 物品信息展示
     /// </summary>
-    public class NearbyItemDisplay : MonoBehaviour, INearbyItemInteract
+    public class NearbyItemDisplay : MonoBehaviour, INearbyItem
     {
         [SerializeField] private Image icon;
         [SerializeField] private Text itemName;
         [SerializeField] private Text itemCount;
         private Item _item;
 
-        public void DisplayItemInfo(Item item)
+        /// <summary>
+        /// 初始化面板信息
+        /// </summary>
+        /// <param name="item"></param>
+        public void InitItemInfo(Item item)
         {
             icon.sprite = item.ItemData.icon;
             itemName.text = item.ItemData.name;
@@ -24,10 +27,25 @@ namespace UI.NearbyItemCanvas
             _item = item;
         }
 
-        public void HideItemInfo()
+        /// <summary>
+        /// 激活显示
+        /// </summary>
+        public void ShowItemInfo()
         {
+            gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// 隐藏面板
+        /// </summary>
+        public void HideItemInfo()
+        {
+            gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// 清除面板信息
+        /// </summary>
         public void ClearItemInfo()
         {
             icon.sprite = null;
@@ -35,6 +53,8 @@ namespace UI.NearbyItemCanvas
             itemCount.text = "";
             _item = null;
         }
+
+        #region Interact With Item
 
         public void OnPointerDown(PointerEventData eventData)
         {
@@ -66,5 +86,7 @@ namespace UI.NearbyItemCanvas
         {
             // 隐藏物品信息悬浮窗
         }
+
+        #endregion
     }
 }

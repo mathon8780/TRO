@@ -17,13 +17,13 @@ MonoBehaviour:
   itemDescription: 
   itemWeight: 1.1
   canStack: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: a141ec3ed009e8e48b6b6077bb5bddd3, type: 3}
   properties:
-  - rid: 1433271829009006611
+  - rid: 1433271939998679045
   references:
     version: 2
     RefIds:
-    - rid: 1433271829009006611
+    - rid: 1433271939998679045
       type: {class: ItemContainerPropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
       data:
         Capacity: 10

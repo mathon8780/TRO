@@ -17,13 +17,8 @@ MonoBehaviour:
   itemDescription: 
   itemWeight: 2.3
   canStack: 0
-  icon: {fileID: 0}
-  properties:
-  - rid: 1433271829009006616
+  icon: {fileID: 21300000, guid: 29f5b8ff2df3b4e449632d9953e0fb4b, type: 3}
+  properties: []
   references:
     version: 2
-    RefIds:
-    - rid: 1433271829009006616
-      type: {class: DurablePropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
-      data:
-        MaxDurability: 100
+    RefIds: []

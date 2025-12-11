@@ -13,12 +13,12 @@ namespace Inventory.Property
         public float CurrentCapacity => GetCurrentCapacity();
 
         // 动态数据
-        public List<Item> ContainerContent;
+        public List<Item> Content;
 
         public ItemContainerProperty(float maxCapacity)
         {
             MaxCapacity = maxCapacity;
-            ContainerContent = new List<Item>();
+            Content = new List<Item>();
         }
 
         #region 物品容器操作逻辑
@@ -30,7 +30,7 @@ namespace Inventory.Property
         private float GetCurrentCapacity()
         {
             float sum = 0;
-            foreach (var item in ContainerContent)
+            foreach (var item in Content)
             {
                 sum += item.ItemStackCount * item.ItemData.itemWeight;
             }
@@ -89,18 +89,20 @@ namespace Inventory.Property
         {
             if (!storeItem.ItemData.canStack)
             {
-                ContainerContent.Add(storeItem);
+                Content.Add(storeItem);
+                return;
             }
 
-            foreach (Item content in ContainerContent)
+            foreach (Item content in Content)
             {
                 //如果存在同类物品则合并
                 if (content.ItemID != storeItem.ItemID) continue;
                 content.ItemStackCount += storeItem.ItemStackCount;
+                return;
             }
 
             //不存在同类物品则直接添加
-            ContainerContent.Add(storeItem);
+            Content.Add(storeItem);
         }
 
         #endregion

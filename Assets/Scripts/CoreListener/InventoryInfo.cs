@@ -10,7 +10,7 @@ namespace CoreListener
         private readonly Dictionary<int, ItemData> _inventory = new();
         public ItemDataBase itemDataBase;
 
-        private void Start()
+        protected override void Awake()
         {
             // 初始化物品数据字典 并读取所有物品数据
 
@@ -20,7 +20,6 @@ namespace CoreListener
             {
                 if (_inventory.ContainsKey(item.itemID))
                     Debug.LogError($"存在相同的物品ID: {item.itemID}，请检查物品数据表！");
-
 
                 _inventory.TryAdd(item.itemID, item);
             }
@@ -40,8 +39,12 @@ namespace CoreListener
         {
             if (_inventory.TryGetValue(itemID, out var itemData))
             {
+                if (!itemData.canStack)
+                    stackCount = 1;
+
                 return new Item(itemData)
                 {
+                    ItemID = itemID,
                     ItemStackCount = stackCount
                 };
             }

@@ -4,6 +4,8 @@ using System.Linq;
 using Inventory.Property;
 using Inventory.PropertyData;
 using Newtonsoft.Json;
+using UnityEngine;
+
 
 namespace Inventory
 {
@@ -15,7 +17,7 @@ namespace Inventory
         public int ItemID = -1; // 物品ID
         public int ItemStackCount = -1; //物品数量
         [JsonIgnore] public ItemData ItemData { get; private set; } //物品的基础数据
-        [JsonIgnore] public List<ItemProperty> ItemProperties = new(); //物品属性存储
+        [JsonIgnore] private readonly List<ItemProperty> _itemProperties = new(); //物品属性存储
 
         public Item(ItemData itemData)
         {
@@ -24,18 +26,18 @@ namespace Inventory
             {
                 var property = itemDataProperty.CreateProperty();
                 property.Initialize(this);
-                ItemProperties.Add(property);
+                _itemProperties.Add(property);
             }
         }
 
         public T GetProperty<T>() where T : ItemProperty
         {
-            return ItemProperties.FirstOrDefault(p => p is T) as T;
+            return _itemProperties.FirstOrDefault(p => p is T) as T;
         }
 
         public IEnumerable<ItemProperty> GetAllProperties()
         {
-            return ItemProperties;
+            return _itemProperties;
         }
 
         /// <summary>
@@ -59,12 +61,12 @@ namespace Inventory
             };
 
             // 复制可序列化属性的运行时状态（若实现了 ISerializableProperty）
-            foreach (var prop in ItemProperties)
+            foreach (var prop in _itemProperties)
             {
                 if (prop is Save.ISerializableProperty serializable)
                 {
                     var state = serializable.SerializeState();
-                    var newProp = newItem.ItemProperties.FirstOrDefault(p => p.GetType() == prop.GetType());
+                    var newProp = newItem._itemProperties.FirstOrDefault(p => p.GetType() == prop.GetType());
                     if (newProp is Save.ISerializableProperty serializableNew && state != null)
                     {
                         serializableNew.DeserializeState(state);

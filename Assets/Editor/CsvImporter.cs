@@ -118,7 +118,11 @@ namespace Editor
                         data.itemName = string.IsNullOrWhiteSpace(values[1]) ? "null" : values[1].Trim();
                         data.itemWeight = float.TryParse(values[2], out float weight) ? weight : -1f;
                         data.canStack = bool.TryParse(values[3], out bool canStack) && canStack;
-                        data.icon = null;
+                        string iconAssetPath = $"Assets/Configs/Inventory/ItemsIcon/{itemId}.png";
+                        Sprite iconSpriteAsset = AssetDatabase.LoadAssetAtPath<Sprite>(iconAssetPath);
+                        if (iconSpriteAsset == null)
+                            Debug.LogError($"[CsvImporter] Icon missing or invalid for item ID {itemId}. Expected path: {iconAssetPath}");
+                        data.icon = iconSpriteAsset;
                         data.properties = new List<ItemPropertyData>();
                     }
 

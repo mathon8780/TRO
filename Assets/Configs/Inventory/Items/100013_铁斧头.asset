@@ -15,15 +15,10 @@ MonoBehaviour:
   itemID: 100013
   itemName: "\u94C1\u65A7\u5934"
   itemDescription: 
-  itemWeight: 4.3
+  itemWeight: 4.5
   canStack: 0
-  icon: {fileID: 0}
-  properties:
-  - rid: 1433271829009006618
+  icon: {fileID: 21300000, guid: 3a1eacd2467b32943b137c55fa7012dc, type: 3}
+  properties: []
   references:
     version: 2
-    RefIds:
-    - rid: 1433271829009006618
-      type: {class: DurablePropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
-      data:
-        MaxDurability: 120
+    RefIds: []

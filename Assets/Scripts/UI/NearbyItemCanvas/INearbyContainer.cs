@@ -4,38 +4,32 @@ using UnityEngine.EventSystems;
 namespace UI.NearbyItemCanvas
 {
     /// <summary>
-    /// Nearby
-    /// 容器交互接口
+    /// Nearby 容器交互接口 
     /// </summary>
-    public interface INearbyContainerInteract : IPointerClickHandler
+    public interface INearbyContainer : IPointerClickHandler
     {
         /// <summary>
         /// 物品进入容器
         /// </summary>
         /// <param name="item"></param>
-        void EnterContainer(Item item);
+        void ContainerEnter(Item item);
 
         /// <summary>
         /// 物品离开容器
         /// </summary>
         /// <param name="item"></param>
-        void ExitContainer(Item item);
+        void ContainerExit(Item item);
 
         /// <summary>
         /// 初始化容器内容
         /// </summary>
         /// <param name="containerItem">容器对象</param>
-        void LoadContainerInfo(Item containerItem);
-
-        /// <summary>
-        /// 卸载容器信息
-        /// </summary>
-        void UnloadContainerInfo();
+        void InitContainer(Item containerItem);
 
         /// <summary>
         /// 清除容器内容 用于下一次的复用
         /// </summary>
-        void ClearContainerInfo();
+        void ClearContainerContent();
 
         /// <summary>
         /// 获取容器内容

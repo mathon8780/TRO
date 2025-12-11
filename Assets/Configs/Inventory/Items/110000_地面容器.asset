@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c81419348e214f96a2d87584769cb8af, type: 3}
+  m_Name: "110000_\u5730\u9762\u5BB9\u5668"
+  m_EditorClassIdentifier: 
+  itemID: 110000
+  itemName: "\u5730\u9762\u5BB9\u5668"
+  itemDescription: 
+  itemWeight: 0
+  canStack: 0
+  icon: {fileID: 21300000, guid: 87ea5be9c780e7149b1ed37745834b8d, type: 3}
+  properties:
+  - rid: 1433271939998679050
+  references:
+    version: 2
+    RefIds:
+    - rid: 1433271939998679050
+      type: {class: ItemContainerPropertyData, ns: Inventory.PropertyData, asm: Assembly-CSharp}
+      data:
+        Capacity: 100000000

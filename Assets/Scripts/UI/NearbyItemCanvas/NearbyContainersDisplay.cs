@@ -6,29 +6,34 @@ using UnityEngine;
 namespace UI.NearbyItemCanvas
 {
     /// <summary>
-    /// Nearby
-    /// 管理[附近的物品]面板中容器的显示
+    /// Nearby 管理[附近的物品]面板中容器的显示
     /// </summary>
     public class NearbyContainersDisplay : MonoBehaviour
     {
+        [SerializeField] private Sprite defaultGroundIcon; // 默认地面图标
         [SerializeField] private RectTransform containerContent; // 容器内容区域
         [SerializeField] private GameObject containerPrefab; // 容器预制体
 
-        private List<INearbyContainerInteract> _displayContainersStore; // 显示容器的空闲池
-        private List<INearbyContainerInteract> _displayContainersInUse; // 正在使用的显示容器列表
-        private INearbyContainerInteract _groundContainer; // 地面容器交互接口
-        private INearbyContainerInteract _currentDisplayContainer; // 当前显示的容器交互接口
+        private Queue<INearbyContainer> _freeContainer; // 容器接口的空闲池
+        private List<INearbyContainer> _useContainer; // 正在使用的显示容器列表
+        private INearbyContainer _ground; // 地面容器交互接口
+
+        private EventNearbyDisplayContainerItems _displayGroundEvent;
+
 
         #region Life Func
 
         private void Awake()
         {
             // 初始化显示容器列表
-            _displayContainersStore ??= new List<INearbyContainerInteract>(10);
-            _displayContainersInUse ??= new List<INearbyContainerInteract>(10);
-            InitGroundContainer();
+            _freeContainer ??= new Queue<INearbyContainer>(15);
+            _useContainer ??= new List<INearbyContainer>(15);
         }
 
+        private void Start()
+        {
+            InitGroundContainer();
+        }
 
         private void OnEnable()
         {
@@ -42,7 +47,7 @@ namespace UI.NearbyItemCanvas
         {
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(CloseToContainer);
             EventCenter.Instance?.RemoveListener<EventNearbyContainer>(AwayFromContainer);
-            EventCenter.Instance?.AddListener<EventNearbyItem>(CloseToItem);
+            EventCenter.Instance?.RemoveListener<EventNearbyItem>(CloseToItem);
             EventCenter.Instance?.RemoveListener<EventNearbyItem>(AwayFromItem);
         }
 
@@ -50,124 +55,98 @@ namespace UI.NearbyItemCanvas
 
 
         /// <summary>
-        /// 添加地面容器交互接口
+        /// 初始化地面容器
         /// </summary>
         private void InitGroundContainer()
         {
-            //todo: 创建地面容器
-
-            // ItemBaseInfo groundBaseInfo = ScriptableObject.CreateInstance<ItemBaseInfo>();
-            // groundBaseInfo.itemId = 1;
-            // groundBaseInfo.itemName = "Ground";
-            // groundBaseInfo.itemType = E_ItemType.ItemContainer;
-            // groundBaseInfo.resourceLoadKey = "Ground";
-            // groundBaseInfo.behaviorTypes = new E_ItemBehaviorType[1];
-            // groundBaseInfo.behaviorTypes[0] = E_ItemBehaviorType.ContainerInteract;
-            // // ItemBaseInfo groundItemInfo = ScriptableObject.CreateInstance<ItemBaseInfo>();
-            // // groundItemInfo.itemId = 1;
-            // // groundItemInfo.itemName = "Ground";
-            // // groundItemInfo.itemType = E_ItemType.ItemContainer;
-            // // groundItemInfo.canStack = false;
-            // // groundItemInfo.behaviorTypes = new[]
-            // // {
-            // //     E_ItemBehaviorType.ContainerInteract,
-            // // };
-            // StItemContainer groundDyItemStaticInfo = new StItemContainer
-            // {
-            //     ID = 1,
-            //     MaxWeight = 999999
-            // };
-            // DyItemContainer groundDyItemDynamicInfo = new DyItemContainer
-            // {
-            //     ID = 1,
-            //     Inventory = new List<Item>(50)
-            // };
-            //
-            // Item groundItemContainer = new Item()
-            // {
-            //     ID = 1,
-            //     StackNum = 1,
-            //     ItemBaseInfo = groundBaseInfo,
-            //     ItemStaticInfo = groundDyItemStaticInfo,
-            //     ItemDynamicInfo = groundDyItemDynamicInfo,
-            // };
-
-
-            GameObject obj = Instantiate(containerPrefab, containerContent);
-            _groundContainer = obj.GetComponent<INearbyContainerInteract>();
-            // _groundContainer.LoadContainerInfo(groundItemContainer);
-            _currentDisplayContainer = _groundContainer;
+            GameObject obj = Instantiate(containerPrefab, containerContent, false);
+            _ground = obj.GetComponent<INearbyContainer>();
+            _ground.InitContainer(InventoryInfo.Instance.GetItem(110000, 1)); //获取并初始化容器信息
+            _displayGroundEvent = new EventNearbyDisplayContainerItems(_ground);
         }
+
+        #region 检测交互
 
         /// <summary>
         /// 靠近容器
         /// </summary>
-        private void CloseToContainer(EventNearbyContainer containerItem)
+        private void CloseToContainer(EventNearbyContainer eventData)
         {
-            if (!ContainerParameterCheck(containerItem, true))
+            if (eventData.IsClose)
+            {
+                if (!ContainerParameterCheck(eventData, true))
+                {
+                    return;
+                }
+            }
+            else
             {
                 return;
             }
 
+            if (!ContainerParameterCheck(eventData, true))
+                return;
+
+
             // 尝试从空闲池中获取一个可用的交互组件
-            INearbyContainerInteract interact;
-            if (_displayContainersStore.Count > 0)
+            INearbyContainer interact;
+            if (_freeContainer.Count <= 0)
             {
-                interact = _displayContainersStore[0];
-                _displayContainersStore.RemoveAt(0);
-            }
-            else
-            {
-                // 2. 空闲池为空，实例化新预制体
-                GameObject newInstance = Instantiate(containerPrefab, containerContent);
-                interact = newInstance.GetComponent<INearbyContainerInteract>();
+                // 1.2 空闲池为空，实例化新预制体
+                GameObject newInstance = Instantiate(containerPrefab, containerContent, false);
+                interact = newInstance.GetComponent<INearbyContainer>();
                 if (interact == null)
                 {
                     Debug.LogError("Instantiated prefab does not implement INearbyContainerInteract.");
                     Destroy(newInstance); // 防止内存泄漏
                     return;
                 }
+
+                _freeContainer.Enqueue(interact);
             }
 
-            // 显示容器信息 加入使用中列表
-            interact.LoadContainerInfo(containerItem.ContainerItem);
-            _displayContainersInUse.Add(interact);
+            // 获得接口 初始化 添加到使用列表
+            interact = _freeContainer.Dequeue();
+            interact.InitContainer(eventData.ContainerItemInfo);
+            _useContainer.Add(interact);
         }
 
         /// <summary>
         /// 远离容器
         /// </summary>
-        private void AwayFromContainer(EventNearbyContainer containerItem)
+        private void AwayFromContainer(EventNearbyContainer eventData)
         {
-            if (!ContainerParameterCheck(containerItem, false))
+            if (!eventData.IsClose)
+            {
+                if (!ContainerParameterCheck(eventData, false))
+                {
+                    return;
+                }
+            }
+            else
             {
                 return;
             }
 
-            // todo: Add：如果一个正在显示的容器离开了范围 清除对应的内容 并切换到地面容器
-            if (containerItem.ContainerItem == _currentDisplayContainer.GetContainer())
-            {
-                _groundContainer.LoadContainerInfo(_groundContainer.GetContainer());
-            }
-
             // 在显示列表中查找对应容器
-            INearbyContainerInteract targetInteract = null;
-            for (int i = 0; i < _displayContainersInUse.Count; i++)
+            INearbyContainer target = null;
+            for (int i = 0; i < _useContainer.Count; i++)
             {
-                if (_displayContainersInUse[i].GetContainer() == containerItem.ContainerItem)
+                if (_useContainer[i].GetContainer() == eventData.ContainerItemInfo)
                 {
-                    targetInteract = _displayContainersInUse[i];
-                    _displayContainersInUse.RemoveAt(i);
+                    target = _useContainer[i];
+                    _useContainer.RemoveAt(i);
                     break;
                 }
             }
 
-            if (targetInteract != null)
+
+            if (target != null)
             {
                 // 清理 隐藏 回收
-                targetInteract.ClearContainerInfo(); // 清除数据（如物品列表引用）
-                targetInteract.UnloadContainerInfo(); // 隐藏UI
-                _displayContainersStore.Add(targetInteract);
+                target.ClearContainerContent(); // 清除数据及隐藏
+                _freeContainer.Enqueue(target);
+                EventCenter.Instance.TriggerEvent(_displayGroundEvent);
             }
             else
             {
@@ -182,15 +161,9 @@ namespace UI.NearbyItemCanvas
         {
             //todo:物品放入容器后 对容器内容的更新
 
-            if (!ItemParameterCheck(worldItem, true)) return;
+            if (!ParameterCheck(worldItem, true)) return;
 
-            if (_groundContainer == null)
-            {
-                Debug.LogError("Ground container is not assigned.");
-                return;
-            }
-
-            _groundContainer.LoadContainerInfo(_groundContainer.GetContainer());
+            _ground.ContainerEnter(worldItem.WorldItemInfo);
         }
 
         /// <summary>
@@ -198,18 +171,20 @@ namespace UI.NearbyItemCanvas
         /// </summary>
         private void AwayFromItem(EventNearbyItem worldItem)
         {
-            if (!ItemParameterCheck(worldItem, false))
+            if (!ParameterCheck(worldItem, false))
                 return;
         }
+
+        #endregion
 
 
         /// <summary>
         /// 容器参数合法性检查
         /// </summary>
-        /// <param name="containerItem">交互传递内容</param>
+        /// <param name="item">交互传递内容</param>
         /// <param name="expectedOp">目标操作</param>
         /// <returns></returns>
-        private bool ContainerParameterCheck(EventNearbyContainer containerItem, bool expectedOp)
+        private bool ContainerParameterCheck(EventNearbyContainer item, bool expectedOp)
         {
             // 预制体非空 显示区域非空 传入参数非空 物品BaseInfo非空 物品类型为容器 物品实例非空
             if (containerPrefab == null)
@@ -224,17 +199,17 @@ namespace UI.NearbyItemCanvas
                 return false;
             }
 
-            if (containerItem == null || containerItem.IsClose != expectedOp)
+            if (item == null || item.IsClose != expectedOp)
             {
-                Debug.LogError($"Container item is null or type is wrong containerItem: {containerItem} + type: {containerItem.IsClose} .");
+                Debug.LogError($"Container item is null or type is wrong containerItem: {item} + type: {item.IsClose} .");
                 return false;
             }
 
-            if (containerItem.ContainerItem.ItemData == null)
+            if (item.ContainerItemInfo.ItemData == null)
             {
                 Debug.Log("Container item base info is null.");
                 //todo:通过ID获取BaseInfo
-                if (containerItem.ContainerItem.ItemData == null)
+                if (item.ContainerItemInfo.ItemData == null)
                 {
                     Debug.LogError("Container item base info is still null after attempting to retrieve by ID.");
                     return false;
@@ -251,7 +226,7 @@ namespace UI.NearbyItemCanvas
         /// <param name="worldItem">交互传递内容</param>
         /// <param name="expectedOp">目标操作</param>
         /// <returns></returns>
-        private bool ItemParameterCheck(EventNearbyItem worldItem, bool expectedOp)
+        private bool ParameterCheck(EventNearbyItem worldItem, bool expectedOp)
         {
             if (worldItem == null || worldItem.IsClose != expectedOp)
             {
@@ -259,16 +234,15 @@ namespace UI.NearbyItemCanvas
                 return false;
             }
 
-            if (worldItem.WorldItem.ItemData == null)
+            if (worldItem.WorldItemInfo.ItemData == null)
             {
                 Debug.LogError("World item base info is null.");
-                if (worldItem.WorldItem.ItemData == null)
+                if (worldItem.WorldItemInfo.ItemData == null)
                 {
                     Debug.LogError("World item base info is still null after attempting to retrieve by ID.");
                     return false;
                 }
             }
-
 
             return true;
         }

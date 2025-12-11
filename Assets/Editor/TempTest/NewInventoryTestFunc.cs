@@ -5,7 +5,7 @@ using Inventory.Property;
 using Inventory.Save;
 using UnityEditor;
 
-namespace Editor
+namespace Editor.TempTest
 {
     public class NewInventoryTestFunc
     {

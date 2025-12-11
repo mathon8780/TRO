@@ -1,51 +1,54 @@
 using System.Collections.Generic;
 using CoreListener;
 using Inventory;
+using Inventory.Property;
 using UI.EventType;
 using UnityEngine;
 
 namespace UI.NearbyItemCanvas
 {
     /// <summary>
-    /// Nearby
-    /// 管理[附近的物品]面板中物品的显示
+    /// Nearby 管理[附近的物品]面板中物品的显示
     /// </summary>
     public class NearbyItemsDisplay : MonoBehaviour
     {
         [SerializeField] private RectTransform itemsContent; // 物品内容区域
         [SerializeField] private GameObject itemPrefab; // 物品UI预制体
 
-        private INearbyContainerInteract _currentOpenContainer; // 当前打开的容器
-        private List<INearbyItemInteract> _displayItems; // 当前显示的物品
+        private INearbyContainer _currentOpenContainer; // 当前打开的容器
+        private Queue<INearbyItem> _freeItems; // 物品UI接口的空闲池
+        private List<INearbyItem> _useItems; // 当前显示的物品
 
 
-        private bool _isDisplayDitalItemInfo = false; // 是否正在显示物品详细信息
+        // private bool _isDisplayDitalItemInfo = false; // 是否正在显示物品详细信息
+
+        #region Life Func
 
         private void Awake()
         {
             // 初始化显示物品列表
-            _displayItems ??= new List<INearbyItemInteract>(20);
-        }
-
-        private void Update()
-        {
-            if (_isDisplayDitalItemInfo)
-            {
-                // 更新物品详细信息列表
-            }
+            _freeItems ??= new Queue<INearbyItem>(20);
+            _useItems ??= new List<INearbyItem>(20);
         }
 
         private void OnEnable()
         {
             EventCenter.Instance.AddListener<EventNearbyDisplayContainerItems>(DisplayItems);
             EventCenter.Instance.AddListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
+            EventCenter.Instance.AddListener<EventNearbyItemEnterAndExit>(HandleItemEnterAndExit);
         }
 
         private void OnDisable()
         {
             EventCenter.Instance?.RemoveListener<EventNearbyDisplayContainerItems>(DisplayItems);
             EventCenter.Instance?.RemoveListener<EventNearbyDisplayDitalItemInfo>(OnDisplayItemDetailInfo);
+            EventCenter.Instance?.RemoveListener<EventNearbyItemEnterAndExit>(HandleItemEnterAndExit);
         }
+
+        #endregion
+
+
+        #region Interaction Func
 
         /// <summary>
         /// 展示对应容器中的物品
@@ -55,38 +58,45 @@ namespace UI.NearbyItemCanvas
         {
             if (containerContext == null)
             {
+                Debug.LogError($"containerContext is null.");
                 return;
             }
 
-            if (!ParameterCheck(containerContext.ContainerItemInteract.GetContainer()))
+            if (!ParameterCheck(containerContext.ContainerItem.GetContainer()))
                 return;
 
-
-            Item containerItem = containerContext.ContainerItemInteract.GetContainer();
+            var containerItem = containerContext.ContainerItem;
 
             // 切换的容器为当前显示的容器 跳过显示
-            if (containerItem == _currentOpenContainer.GetContainer())
+            if (_currentOpenContainer == containerItem)
                 return;
-
 
             // 清空当前显示的物品
             ClearDisplayInfo();
-            // todo:显示新的物品列表
-
-            // DisplayItemInfo((containerItem.ItemDynamicInfo as DyItemContainer)?.Inventory);
+            DisplayContainerItems(containerItem.GetContainer().GetProperty<ItemContainerProperty>().Content);
         }
 
+        /// <summary>
+        /// 处理物品的靠近远离容器的事件
+        /// </summary>
+        /// <param name="eventData"></param>
+        private void HandleItemEnterAndExit(EventNearbyItemEnterAndExit eventData)
+        {
+            //todo: logic
+        }
 
         /// <summary>
         /// 清除物品显示面板的信息 用于下一次显示时的复用
         /// </summary>
         private void ClearDisplayInfo()
         {
-            foreach (var itemInteract in _displayItems)
+            foreach (var itemInteract in _useItems)
             {
                 // 清除显示内容并隐藏
                 itemInteract.ClearItemInfo();
                 itemInteract.HideItemInfo();
+                // 回收到空闲池
+                _freeItems.Enqueue(itemInteract);
             }
         }
 
@@ -94,41 +104,57 @@ namespace UI.NearbyItemCanvas
         /// 显示物品信息
         /// </summary>
         /// <param name="items">需要显示的物品的列表</param>
-        private void DisplayItemInfo(List<Item> items)
+        private void DisplayContainerItems(List<Item> items)
         {
-            if (items == null || items.Count == 0)
+            if (items == null)
             {
-                Debug.LogError("No items to display.");
+                Debug.LogError($"items is null.");
                 return;
             }
 
             // 如果现有的显示面板不够用 则扩充
-            if (items.Count >= _displayItems.Count)
+            if (items.Count >= _freeItems.Count)
             {
-                int itemsToAdd = items.Count - _displayItems.Count + 1;
+                int itemsToAdd = items.Count - _useItems.Count;
                 for (int i = 0; i < itemsToAdd; i++)
                 {
-                    GameObject newItemObj = Instantiate(itemPrefab, itemsContent);
-                    INearbyItemInteract itemInteract = newItemObj.GetComponent<INearbyItemInteract>();
+                    GameObject newItemObj = Instantiate(itemPrefab, itemsContent, false);
+                    INearbyItem itemInteract = newItemObj.GetComponent<INearbyItem>();
                     if (itemInteract != null)
                     {
                         itemInteract.ClearItemInfo();
                         itemInteract.HideItemInfo();
-                        _displayItems.Add(itemInteract);
+                        _freeItems.Enqueue(itemInteract);
                     }
                     else
                     {
-                        Debug.LogError("The instantiated item prefab does not have an INearbyItemInteract component.");
+                        Debug.LogError("The instantiated item prefab does not have an INearbyItem component.");
                     }
                 }
             }
 
             // 显示物品信息
-            for (int i = 0; i < items.Count; i++)
+            foreach (var item in items)
             {
-                _displayItems[i].DisplayItemInfo(items[i]);
+                INearbyItem itemInteract;
+                if (_freeItems.Count > 0)
+                {
+                    itemInteract = _freeItems.Dequeue();
+                }
+                else
+                {
+                    Debug.LogError("No free item interact available, this should not happen.");
+                    continue;
+                }
+
+                itemInteract.InitItemInfo(item);
+                itemInteract.ShowItemInfo();
+                _useItems.Add(itemInteract);
             }
         }
+
+        #endregion
+
 
         /// <summary>
         /// 合法性检测
@@ -143,7 +169,7 @@ namespace UI.NearbyItemCanvas
 
         private void OnDisplayItemDetailInfo(EventNearbyDisplayDitalItemInfo eventData)
         {
-            _isDisplayDitalItemInfo = eventData.Display;
+            // _isDisplayDitalItemInfo = eventData.Display;
         }
     }
 }
